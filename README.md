@@ -6,17 +6,19 @@ A command line stopwatch
 ## Compile
 ```bash
 make
+# Install
+mv ./bin/sw /usr/bin
 ```
 
 ## Use
 Foreground and background [color](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors)  
 ```bash
 # Start a stopwatch
-./sw
+sw
 # Start a countdown (hh:mm:ss)
-./sw -c 00:00:30
+sw -c 00:00:30
 # Execute cmd after the countdown
-./sw -c 00:00:30 && cmd
+sw -c 00:00:30 && cmd
 
 # On unix system, you can change the display color
 ./sw --fg 97 --bg 45
