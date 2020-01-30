@@ -45,7 +45,7 @@ std::string Stopwatch::elapsed_HHMMSSZZZ() const
 
 Stopwatch::ms Stopwatch::remaining() const
 {
-    Stopwatch::ms millisec = std::chrono::duration_cast<Stopwatch::ms>(countdown - (clock.now() - begin));
+    Stopwatch::ms millisec = countdown - elapsed();
     return (millisec < Stopwatch::ms(0) ? Stopwatch::ms(0) : millisec);
 }
 
