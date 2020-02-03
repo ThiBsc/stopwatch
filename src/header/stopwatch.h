@@ -33,6 +33,14 @@ public:
      */
     void start(ms countdown);
     /**
+     * Stop the stopwatch
+     */
+    void stop();
+    /**
+     * Add msecs to the elapsed time
+     */
+    void addMsecs(ms msecs);
+    /**
      * Return the elapsed time in ms
      */
     ms elapsed() const;
@@ -58,6 +66,7 @@ private:
     watch clock;
     timepoint begin, end;
     ms countdown;
+    bool isRunning;
 
 };
 

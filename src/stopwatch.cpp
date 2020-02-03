@@ -6,6 +6,7 @@
 #define assertm(exp, msg) assert(((void)msg, exp))
 
 Stopwatch::Stopwatch()
+    : isRunning(false)
 {
     assertm(std::chrono::steady_clock::is_steady, "You can't use steady_clock");
 }
@@ -13,17 +14,32 @@ Stopwatch::Stopwatch()
 void Stopwatch::start()
 {
     begin = clock.now();
+    isRunning = true;
 }
 
 void Stopwatch::start(ms countdown)
 {
     this->countdown = countdown;
     begin = clock.now();
+    isRunning = true;
+}
+
+void Stopwatch::stop()
+{
+    if (isRunning){
+        end = clock.now();
+        isRunning = false;
+    }
+}
+
+void Stopwatch::addMsecs(ms msecs)
+{
+    begin -= msecs;
 }
 
 Stopwatch::ms Stopwatch::elapsed() const
 {
-    return std::chrono::duration_cast<Stopwatch::ms>(clock.now() - begin);
+    return std::chrono::duration_cast<Stopwatch::ms>( (isRunning ? clock.now() : end) - begin);
 }
 
 std::string Stopwatch::elapsed_HHMMSSZZZ() const

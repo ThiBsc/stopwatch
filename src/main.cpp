@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 {
     int c, idxopt;
     int help = 0;
-    string limit;
+    string countdown;
     // To change stopwatch color (works on UNIX)
     string fg, bg, color, reset;
 
@@ -27,11 +27,11 @@ int main(int argc, char *argv[])
         {0,         	0,              		NULL,		0}
 	};
 	
-	while ((c = getopt_long(argc, argv, "hc:", t_opt, &idxopt)) != -1){
+	while ((c = getopt_long(argc, argv, "hc:p:f:b:", t_opt, &idxopt)) != -1){
 		switch (c){
 			case 'h': help = 1;
 				break;
-            case 'c': limit = optarg;
+            case 'c': countdown = optarg;
                 break;
 #ifdef __unix__
             case 'f': fg = optarg;
@@ -63,14 +63,25 @@ int main(int argc, char *argv[])
 
     if (help){
         print_help();
-    } else if (!limit.empty()){
+    } else if (!isatty(STDIN_FILENO)){
+        // We want to measure the execution time of a program (piped)
+        sw.start();
+        
+        char buffer[1];
+        while (read(STDIN_FILENO, buffer, sizeof(buffer)) > 0) cout << buffer;
+        
+        // To compensate for a slight advance in the tube process
+        sw.addMsecs(Stopwatch::ms(10));
+
+        cout << color << '\r' << sw.elapsed_HHMMSSZZZ() << reset << flush;
+    } else if (!countdown.empty()){
         // hh:mm:ss
         int h, m, s;
         h = m = s = 0;
         try {
-            h = stoi(limit.substr(0, 2));
-            m = stoi(limit.substr(3, 5));
-            s = stoi(limit.substr(6, 8));
+            h = stoi(countdown.substr(0, 2));
+            m = stoi(countdown.substr(3, 5));
+            s = stoi(countdown.substr(6, 8));
 
             // Init values
             Stopwatch::hrs dh(h);
@@ -86,7 +97,7 @@ int main(int argc, char *argv[])
                 cout << color << '\r' << sw.remaining_HHMMSSZZZ() << reset << flush;
                 std::this_thread::sleep_for(Stopwatch::ms(100));    
             }
-            cout << '\r' << "00:00:00.000" << flush;
+            cout << color << '\r' << "00:00:00.000" << reset << flush;
             cout << '\a';
         } catch (const std::exception&  e) {
             cout << "Invalid countdown format, must be hh:mm:ss";

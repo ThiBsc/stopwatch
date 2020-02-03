@@ -19,6 +19,8 @@ sw
 sw -c 00:00:30
 # Execute cmd after the countdown
 sw -c 00:00:30 && cmd
+# Measure the execution time of a process
+ping localhost -c 3 | sw
 
 # On unix system, you can change the display color
 ./sw --fg 97 --bg 45
