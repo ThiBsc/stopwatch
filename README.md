@@ -8,6 +8,8 @@ A command line stopwatch
 make
 # Install
 mv ./bin/sw /usr/bin
+# Display help
+sw --help
 ```
 
 ## Use
@@ -17,6 +19,9 @@ Foreground and background [color](https://en.wikipedia.org/wiki/ANSI_escape_code
 sw
 # Start a countdown (hh:mm:ss)
 sw -c 00:00:30
+# Change the display format (mm:ss.zzz) / (mm:ss)
+sw -f %M:%S
+sw -f %M:%S -m
 # Execute cmd after the countdown
 sw -c 00:00:30 && cmd
 # Measure the execution time of a process
@@ -34,5 +39,6 @@ sw.start();
 
 // do something
 
-cout << sw.elapsed_HHMMSSZZZ() << endl;
+// https://en.cppreference.com/w/cpp/io/manip/put_time
+cout << sw.elapsed("%H:%M:%S", true) << endl;
 ```

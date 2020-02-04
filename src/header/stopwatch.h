@@ -46,10 +46,10 @@ public:
     ms elapsed() const;
     /**
      * Return a string human readable representation
-     * of the elapsed time:
-     * hh:mm:ss.zzz
+     * of the elapsed time in a specified format:
+     * https://en.cppreference.com/w/cpp/io/manip/put_time
      */
-    std::string elapsed_HHMMSSZZZ() const;
+    std::string elapsed(const char* fmt, bool milliseconds) const;
     /**
      * Return the remaining time in ms
      * (Use it when you start with countdown)
@@ -57,10 +57,10 @@ public:
     ms remaining() const;
     /**
      * Return a string human readable representation
-     * of the remaining time:
-     * hh:mm:ss.zzz
+     * of the remaining time in a specified format:
+     * https://en.cppreference.com/w/cpp/io/manip/put_time
      */
-    std::string remaining_HHMMSSZZZ() const;
+    std::string remaining(const char* fmt, bool milliseconds) const;
 
 private:
     watch clock;

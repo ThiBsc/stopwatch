@@ -42,20 +42,24 @@ Stopwatch::ms Stopwatch::elapsed() const
     return std::chrono::duration_cast<Stopwatch::ms>( (isRunning ? clock.now() : end) - begin);
 }
 
-std::string Stopwatch::elapsed_HHMMSSZZZ() const
+std::string Stopwatch::elapsed(const char* fmt, bool milliseconds) const
 {
     Stopwatch::ms ms = elapsed();
 
-    Stopwatch::ms mmm = ms % 1000;
+    Stopwatch::ms zzz = ms % 1000;
     Stopwatch::secs ss = std::chrono::duration_cast<Stopwatch::secs>(ms) % 60;
     Stopwatch::mins mm = std::chrono::duration_cast<Stopwatch::mins>(ms) % 60;
     Stopwatch::hrs hh = std::chrono::duration_cast<Stopwatch::hrs>(ms);
 
+    // https://en.cppreference.com/w/cpp/chrono/c/tm
+    std::tm tm = { int(ss.count()), int(mm.count()), int(hh.count()), 0, 0, 0, 0, 0, 0 };
+
     std::stringstream sstream;
-    sstream << std::setfill('0') << std::setw(2) << hh.count()
-    << ':' << std::setfill('0') << std::setw(2) << mm.count()
-    << ':' << std::setfill('0') << std::setw(2) << ss.count()
-    << '.' << std::setfill('0') << std::setw(3) << mmm.count();
+    sstream << std::put_time(&tm, fmt);
+    if (milliseconds){
+        sstream << '.' << std::setfill('0') << std::setw(3) << zzz.count();
+    }
+
     return sstream.str();
 }
 
@@ -65,19 +69,23 @@ Stopwatch::ms Stopwatch::remaining() const
     return (millisec < Stopwatch::ms(0) ? Stopwatch::ms(0) : millisec);
 }
 
-std::string Stopwatch::remaining_HHMMSSZZZ() const
+std::string Stopwatch::remaining(const char* fmt, bool milliseconds) const
 {
     Stopwatch::ms ms = remaining();
 
-    Stopwatch::ms mmm = ms % 1000;
+    Stopwatch::ms zzz = ms % 1000;
     Stopwatch::secs ss = std::chrono::duration_cast<Stopwatch::secs>(ms) % 60;
     Stopwatch::mins mm = std::chrono::duration_cast<Stopwatch::mins>(ms) % 60;
     Stopwatch::hrs hh = std::chrono::duration_cast<Stopwatch::hrs>(ms);
 
+    // https://en.cppreference.com/w/cpp/chrono/c/tm
+    std::tm tm = { int(ss.count()), int(mm.count()), int(hh.count()), 0, 0, 0, 0, 0, 0 };
+
     std::stringstream sstream;
-    sstream << std::setfill('0') << std::setw(2) << hh.count()
-    << ':' << std::setfill('0') << std::setw(2) << mm.count()
-    << ':' << std::setfill('0') << std::setw(2) << ss.count()
-    << '.' << std::setfill('0') << std::setw(3) << mmm.count();
+    sstream << std::put_time(&tm, fmt);
+    if (milliseconds){
+        sstream << '.' << std::setfill('0') << std::setw(3) << zzz.count();
+    }
+    
     return sstream.str();
 }
